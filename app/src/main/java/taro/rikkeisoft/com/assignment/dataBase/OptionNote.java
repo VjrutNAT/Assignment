@@ -76,6 +76,6 @@ public class OptionNote  {
                    Long.parseLong(id), cursor.getString(cursor.getColumnIndex(Note.PICTURE)));
         } catch (ParseException e) {
             e.printStackTrace();
-        }
+        }return null;
     }
 }
