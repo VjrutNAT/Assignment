@@ -4,35 +4,92 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <GridView
+        android:id="@+id/gv_image"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:numColumns="4"
+        android:horizontalSpacing="@dimen/padding_grid_view"></GridView>
     <TextView
         android:id="@+id/tv_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_margin="@dimen/activity_vertical_margin"
+        android:layout_below="@id/gv_image"
         android:textColor="@color/paper_line"
         android:textSize="@dimen/text_size_time" />
 
     <EditText
-        android:id="@+id/edt_title"
+        android:id="@+id/edt_title_note"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_time"
-        android:layout_margin="@dimen/activity_horizontal_margin"
         android:hint="@string/title"
-        android:padding="@dimen/padding_grid_view"
-        android:textColor="@color/balck"
+        android:paddingLeft="@dimen/margin_top"
+        android:textColor="@color/black"
         android:textSize="@dimen/text_size"
         android:textStyle="bold" />
 
     <EditText
-        android:id="@+id/edt_note"
+        android:id="@+id/edt_content_note"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/edt_title"
-        android:layout_margin="@dimen/activity_horizontal_margin"
-        android:hint="@string/app_name"
-        android:padding="@dimen/padding_grid_view"
+        android:layout_below="@id/edt_title_note"
+        android:layout_marginTop="@dimen/margin_top"
+        android:hint="@string/note"
+        android:paddingLeft="@dimen/margin_top"
         android:textColor="@color/dark_gray"
         android:textSize="@dimen/text_size" />
+
+    <RelativeLayout
+        android:id="@+id/ll_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edt_content_note">
+
+        <ImageView
+            android:id="@+id/imv_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="9dp"
+            android:src="@drawable/ic_action_alarms_select"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="9dp" />
+        <TextView
+            android:id="@+id/tv_alarm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:textSize="@dimen/text_size_time"
+            android:layout_toRightOf="@id/imv_time"
+            android:text="@string/alram"/>
+        <LinearLayout
+            android:id="@+id/ll_alarm_select"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_toRightOf="@id/imv_time"
+            android:layout_centerVertical="true"
+            android:visibility="gone"
+            android:layout_marginRight="@dimen/margin_top">
+            <Spinner
+                android:id="@+id/sp_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
+            <Spinner
+                android:id="@+id/sp_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"/>
+            <ImageButton
+                android:id="@+id/imv_bt_close_alarm"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:src="@drawable/close_alarm"/>
+        </LinearLayout>
+    </RelativeLayout>
+
 </RelativeLayout>

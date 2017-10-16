@@ -5,12 +5,14 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="taro.rikkeisoft.com.assignment.MainActivity">
+    tools:context="taro.rikkeisoft.com.assignment.activity.MainActivity">
 
     <GridView
         android:id="@+id/gv_note"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:numColumns="2"
-        android:padding="@dimen/padding_grid_view"></GridView>
+        android:columnWidth="100dp"
+        android:horizontalSpacing="@dimen/padding_grid_view"
+        android:stretchMode="columnWidth"/>
 </RelativeLayout>

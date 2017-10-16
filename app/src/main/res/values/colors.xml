@@ -12,5 +12,5 @@
     <color name="color_2">#77ddbb</color>
     <color name="color_3">#66ccdd</color>
     <color name="pressed_note">#cc0099cc</color>
-    <color name="balck">#000000</color>
+    <color name="black">#000000</color>
 </resources>
