@@ -15,67 +15,101 @@ import taro.rikkeisoft.com.assignment.utils.Utils;
  * Created by VjrutNAT on 10/17/2017.
  */
 
-public class OptionNote  {
+public class OptionNote {
 
     private static OptionNote instrance;
     public static long lastNoteId = 0;
     private SQLiteDatabase db;
 
-    public static OptionNote getInstrance(Context context){
-        if (instrance == null){
+    public static OptionNote getInstrance(Context context) {
+        if (instrance == null) {
             instrance = new OptionNote(context);
         }
         return instrance;
     }
 
-    public OptionNote (Context context){
+    public OptionNote(Context context) {
         this.db = new SQLiteDataBaseNote(context).getWritableDatabase();
     }
 
-    public ArrayList<Note> getAll(){
+    public ArrayList<Note> getAll() {
         ArrayList<Note> notes = new ArrayList<>();
         Cursor cursor = this.db.query(true, SQLiteDataBaseNote.TABLE_NOTE, new String[0], null, null, null, null, "CREATE_TIME DESC", null);
-        if (cursor != null){
+        if (cursor != null) {
             cursor.moveToFirst();
-            while (!cursor.isAfterLast()){
+            while (!cursor.isAfterLast()) {
                 Note n = getNoteFromCursor(cursor);
-                if (n != null){
+                if (n != null) {
                     notes.add(n);
-                    if (n.getId() > lastNoteId){
-                        lastNoteId  = n.getId();
+                    if (n.getId() > lastNoteId) {
+                        lastNoteId = n.getId();
                     }
-                }cursor.moveToNext();
-            }cursor.moveToNext();
-        }return notes;
+                }
+                cursor.moveToNext();
+            }
+            cursor.moveToNext();
+        }
+        return notes;
     }
 
-    public void addNote(Note note){
-        ContentValues contentValues =  new ContentValues();
+    public void addNote(Note note) {
+        ContentValues contentValues = new ContentValues();
         contentValues.put(Note.ID, Long.valueOf(note.getId()));
         contentValues.put(Note.TITLE, note.getTitle());
         contentValues.put(Note.CONTENT, note.getContent());
         contentValues.put(Note.CREATE_ALARM, Utils.fullDateFormat.format(note.getCreateAlarm()));
-        if (note.getAlarm() != null){
+        if (note.getAlarm() != null) {
             contentValues.put(Note.ALARM, Utils.fullDateFormat.format(note.getAlarm()));
-        }else{
+        } else {
             contentValues.putNull(Note.ALARM);
         }
-        contentValues.put(Note.COLOR, note.getColor().replace("#","0x"));
-
+        contentValues.put(Note.COLOR, note.getColor().replace("#", "0x"));
     }
 
-    public Note getNoteFromCursor(Cursor cursor){
-        String id =  cursor.getString(cursor.getColumnIndex(Note.ID));
+    public Note getNote(long id){
+        Cursor cursor = this.db.query(true, SQLiteDataBaseNote.TABLE_NOTE, new String[0], "ID=" + id, null, null, null, null, null);
+        cursor.moveToFirst();
+        if (cursor == null){
+            return null;
+        }
+        Note note = getNoteFromCursor(cursor);
+        cursor.close();
+        return note;
+    }
+
+    public void updateNote(Note newNote){
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(Note.ID, Long.valueOf(newNote.getId()));
+        contentValues.put(Note.TITLE, newNote.getTitle());
+        contentValues.put(Note.CONTENT, newNote.getContent());
+        contentValues.put(Note.CREATE_ALARM, Utils.fullDateFormat.format(newNote.getCreateAlarm()));
+        if (newNote.getAlarm() != null){
+            contentValues.put(Note.ALARM, Utils.fullDateFormat.format(newNote.getAlarm()));
+        }else {
+            contentValues.putNull(Note.ALARM);
+        }
+        contentValues.put(Note.COLOR, newNote.getColor());
+        contentValues.put(Note.PICTURE, newNote.getPicture());
+        this.db.update(SQLiteDataBaseNote.TABLE_NOTE, contentValues, "ID=" + newNote.getId(), null);
+    }
+
+    public void delete(long id){
+        this.db.delete(SQLiteDataBaseNote.TABLE_NOTE, "ID=" + id, null);
+    }
+
+    public Note getNoteFromCursor(Cursor cursor) {
+        String id = cursor.getString(cursor.getColumnIndex(Note.ID));
         String title = cursor.getString(cursor.getColumnIndex(Note.TITLE));
         String content = cursor.getString(cursor.getColumnIndex(Note.CONTENT));
         String create = cursor.getString(cursor.getColumnIndex(Note.CREATE_ALARM));
         String alarm = cursor.getString(cursor.getColumnIndex(Note.ALARM));
 
         try {
-            return new Note(title, content, alarm != null ? Utils.fullDateFormat.parse(alarm) : null, Utils.fullDateFormat.parse(create), cursor.getString(cursor.getColumnIndex(Note.COLOR)).replace("0x","#"),
-                   Long.parseLong(id), cursor.getString(cursor.getColumnIndex(Note.PICTURE)));
+            return new Note(title, content, alarm != null ? Utils.fullDateFormat.parse(alarm) : null, Utils.fullDateFormat.parse(create), cursor.getString(cursor.getColumnIndex(Note.COLOR)).replace("0x", "#"),
+                    Long.parseLong(id), cursor.getString(cursor.getColumnIndex(Note.PICTURE)));
         } catch (ParseException e) {
             e.printStackTrace();
-        }return null;
+        }
+        return null;
     }
 }
